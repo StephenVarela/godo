@@ -68,8 +68,7 @@ var lbListJSONResponse = `
                 21
             ],
             "disable_lets_encrypt_dns_records": true,
-            "project_id": "6929eef6-4e45-11ed-bdc3-0242ac120002",
-            "http_idle_timeout_seconds": 60
+            "project_id": "6929eef6-4e45-11ed-bdc3-0242ac120002"
         }
     ],
     "links":{
@@ -151,8 +150,7 @@ var lbCreateJSONResponse = `
         "redirect_http_to_https":true,
         "vpc_uuid":"880b7f98-f062-404d-b33c-458d545696f6",
         "disable_lets_encrypt_dns_records": true,
-        "project_id": "6929eef6-4e45-11ed-bdc3-0242ac120002",
-        "http_idle_timeout_seconds": 60
+        "project_id": "6929eef6-4e45-11ed-bdc3-0242ac120002"
     }
 }
 `
@@ -214,8 +212,7 @@ var lbGetJSONResponse = `
             21
         ],
         "disable_lets_encrypt_dns_records": false,
-        "project_id": "6929eef6-4e45-11ed-bdc3-0242ac120002",
-        "http_idle_timeout_seconds": 60
+        "project_id": "6929eef6-4e45-11ed-bdc3-0242ac120002"
     }
 }
 `
@@ -281,8 +278,7 @@ var lbUpdateJSONResponse = `
             2,
             21
         ],
-        "project_id": "6929eef6-4e45-11ed-bdc3-0242ac120002",
-        "http_idle_timeout_seconds": 60
+        "project_id": "6929eef6-4e45-11ed-bdc3-0242ac120002"
     }
 }
 `
@@ -301,7 +297,6 @@ func TestLoadBalancers_Get(t *testing.T) {
 
 	loadBalancer, _, err := client.LoadBalancers.Get(ctx, loadBalancerID)
 	require.NoError(t, err)
-	expectedTimeout := uint64(60)
 
 	expected := &LoadBalancer{
 		ID:        "37e6be88-01ec-4ec7-9bc6-a514d4719057",
@@ -341,9 +336,8 @@ func TestLoadBalancers_Get(t *testing.T) {
 			Available: true,
 			Features:  []string{"private_networking", "backups", "ipv6", "metadata", "storage"},
 		},
-		DropletIDs:             []int{2, 21},
-		ProjectID:              "6929eef6-4e45-11ed-bdc3-0242ac120002",
-		HTTPIdleTimeoutSeconds: &expectedTimeout,
+		DropletIDs: []int{2, 21},
+		ProjectID:  "6929eef6-4e45-11ed-bdc3-0242ac120002",
 	}
 
 	disableLetsEncryptDNSRecords := false
@@ -408,7 +402,6 @@ func TestLoadBalancers_Create(t *testing.T) {
 	loadBalancer, _, err := client.LoadBalancers.Create(ctx, createRequest)
 	require.NoError(t, err)
 
-	expectedTimeout := uint64(60)
 	expected := &LoadBalancer{
 		ID:        "8268a81c-fcf5-423e-a337-bbfe95817f23",
 		Name:      "example-lb-01",
@@ -454,12 +447,11 @@ func TestLoadBalancers_Create(t *testing.T) {
 			Available: true,
 			Features:  []string{"private_networking", "backups", "ipv6", "metadata", "storage"},
 		},
-		Tags:                   []string{"my-tag"},
-		DropletIDs:             []int{2, 21},
-		RedirectHttpToHttps:    true,
-		VPCUUID:                "880b7f98-f062-404d-b33c-458d545696f6",
-		ProjectID:              "6929eef6-4e45-11ed-bdc3-0242ac120002",
-		HTTPIdleTimeoutSeconds: &expectedTimeout,
+		Tags:                []string{"my-tag"},
+		DropletIDs:          []int{2, 21},
+		RedirectHttpToHttps: true,
+		VPCUUID:             "880b7f98-f062-404d-b33c-458d545696f6",
+		ProjectID:           "6929eef6-4e45-11ed-bdc3-0242ac120002",
 	}
 
 	disableLetsEncryptDNSRecords := true
@@ -647,7 +639,6 @@ func TestLoadBalancers_Update(t *testing.T) {
 	loadBalancer, _, err := client.LoadBalancers.Update(ctx, loadBalancerID, updateRequest)
 	require.NoError(t, err)
 
-	expectedTimeout := uint64(60)
 	expected := &LoadBalancer{
 		ID:        "8268a81c-fcf5-423e-a337-bbfe95817f23",
 		Name:      "example-lb-01",
@@ -693,7 +684,6 @@ func TestLoadBalancers_Update(t *testing.T) {
 		DropletIDs:                   []int{2, 21},
 		DisableLetsEncryptDNSRecords: nil,
 		ProjectID:                    "6929eef6-4e45-11ed-bdc3-0242ac120002",
-		HTTPIdleTimeoutSeconds:       &expectedTimeout,
 	}
 
 	assert.Equal(t, expected, loadBalancer)
@@ -713,7 +703,6 @@ func TestLoadBalancers_List(t *testing.T) {
 
 	require.NoError(t, err)
 
-	expectedTimeout := uint64(60)
 	expectedLBs := []LoadBalancer{
 		{
 			ID:        "37e6be88-01ec-4ec7-9bc6-a514d4719057",
@@ -752,9 +741,8 @@ func TestLoadBalancers_List(t *testing.T) {
 				Available: true,
 				Features:  []string{"private_networking", "backups", "ipv6", "metadata", "storage"},
 			},
-			DropletIDs:             []int{2, 21},
-			ProjectID:              "6929eef6-4e45-11ed-bdc3-0242ac120002",
-			HTTPIdleTimeoutSeconds: &expectedTimeout,
+			DropletIDs: []int{2, 21},
+			ProjectID:  "6929eef6-4e45-11ed-bdc3-0242ac120002",
 		},
 	}
 	disableLetsEncryptDNSRecords := true
@@ -984,7 +972,6 @@ func TestLoadBalancers_AsRequest(t *testing.T) {
 		TargetPort:     80,
 	}
 
-	expectedIdleTimeout := uint64(60)
 	want := &LoadBalancerRequest{
 		Name:      "test-loadbalancer",
 		Algorithm: "least_connections",
@@ -1016,7 +1003,6 @@ func TestLoadBalancers_AsRequest(t *testing.T) {
 		EnableBackendKeepalive: true,
 		VPCUUID:                "880b7f98-f062-404d-b33c-458d545696f6",
 		ProjectID:              "6929eef6-4e45-11ed-bdc3-0242ac120002",
-		HTTPIdleTimeoutSeconds: &expectedIdleTimeout,
 		ValidateOnly:           true,
 	}
 
